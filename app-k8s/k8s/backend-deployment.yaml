@@ -33,6 +33,8 @@ spec:
             - name: DB_PORT
               value: "3306"
 
+
+
           # Se agrega Resource para que Metrics Server calcule el % de CPU y Memoria para escalar 
           resources:
             requests:
