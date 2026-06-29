@@ -38,7 +38,8 @@ ECR_REGISTRY := $(account).dkr.ecr.$(region).amazonaws.com
 
 # --- Phony / safety ---------------------------------------------------------
 .PHONY: help login build build-all tag tag-all push push-all \
-        publish publish-all clean check-account check-docker
+        publish publish-all clean check-account check-docker \
+        fix-permissions
 
 # Default target: show the help.
 help:
@@ -67,6 +68,7 @@ help:
 	@echo
 	@echo "Mantenimiento:"
 	@echo "  make clean                      # borra las imágenes locales taggeadas"
+	@echo "  make fix-permissions            # corrige permisos de Terraform/Docker en Linux"
 	@echo
 	@echo "Servicios configurados: $(services)"
 	@echo "Source dir:            $(abspath $(source))"
@@ -77,6 +79,10 @@ check-docker:
 		echo "ERROR: $(DOCKER) no está instalado o no está en PATH"; exit 1; }
 	@command -v $(AWS) >/dev/null 2>&1 || { \
 		echo "ERROR: $(AWS) CLI no está instalado o no está en PATH"; exit 1; }
+
+fix-permissions:
+	@echo "[permissions] Aplicando correcciones de permisos para Terraform y Docker..."
+	@../scripts/fix-permissions.sh --all
 
 # Fails fast if `account` is empty or non-numeric. Skipped by the build-only
 # targets, which don't need an account.
